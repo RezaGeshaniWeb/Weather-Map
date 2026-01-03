@@ -137,11 +137,24 @@ const weatherIcons = {
 };
 
 const weatherTranslation = {
-  rainy: 'ابری',
-  sunny: 'صاف',
-  cloudy: 'ابری',
-  windy: 'بادی',
-  hot: 'گرم',
+  rainy: { en: 'Rainy', fa: 'بارانی' },
+  sunny: { en: 'Sunny', fa: 'صاف' },
+  cloudy: { en: 'Cloudy', fa: 'ابری' },
+  windy: { en: 'Windy', fa: 'بادی' },
+  hot: { en: 'Hot', fa: 'گرم' },
+}
+
+const cityTranslation = {
+  Tehran: 'تهران',
+  Mashhad: 'مشهد',
+  Isfahan: 'اصفهان',
+  Shiraz: 'شیراز',
+  Tabriz: 'تبریز',
+  Ahvaz: 'اهواز',
+  Kerman: 'کرمان',
+  Rasht: 'رشت',
+  Urmia: 'ارومیه',
+  Yazd: 'یزد',
 }
 
 const sideBar = document.querySelector('aside')
@@ -151,26 +164,26 @@ sideBar.innerHTML = ''
 iranCities.forEach(city => {
   let weatherIcon = weatherIcons[city.weather]
   let weatherTranslated = weatherTranslation[city.weather]
+  let cityTranslated = cityTranslation[city.name]
 
-  let { iconUrl } = weatherIcon.options
+  let { html: iconHtml } = weatherIcon.options
 
   markersTarget[city.name] = L.marker([city.latitude, city.longitude], { icon: weatherIcon })
-    .bindPopup(`${city.name}<br>وضعیت آب و هوا: ${weatherTranslated}`)
+    .bindPopup(`${city.name} (${cityTranslated})<br>Weather Status (وضعیت آب و هوا): ${weatherTranslated.en} (${weatherTranslated.fa})`)
     .addTo(map)
 
   let cityBox = document.createElement('div')
-  cityBox.innerHTML = `<div>
-        <img src="" alt="">
-        <div>
-          <h5>نام شهر</h5>
-          <p>${city.name}</p>
-          <div>
-            <span>وضعیت آب و هوا : </span>
-            <span>${iconUrl}<span/>
-            <span>${weatherTranslated}</span>
-          </div>
-        </div>
-      </div>`
+  cityBox.innerHTML = `
+    <div>${iconHtml || ''}</div>
+    <div>
+      <h5>City Name <span class="fa-text">(نام شهر)</span></h5>
+      <p>${city.name} <span class="fa-text">(${cityTranslated})</span></p>
+      <div>
+        <span>Weather Status <span class="fa-text">(وضعیت آب و هوا)</span>: </span>
+        <span>${weatherTranslated.en} <span class="fa-text">(${weatherTranslated.fa})</span></span>
+      </div>
+    </div>
+  `
 
   cityBox.addEventListener('click', () => {
     map.setView([city.latitude, city.longitude])

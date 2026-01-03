@@ -186,8 +186,14 @@ iranCities.forEach(city => {
   `
 
   cityBox.addEventListener('click', () => {
-    map.setView([city.latitude, city.longitude])
-    markersTarget[city.name].openPopup()
+    map.flyTo([city.latitude, city.longitude], 12, {
+      animate: true,
+      duration: 1.0
+    })
+    
+    setTimeout(() => {
+      markersTarget[city.name].openPopup()
+    }, 500)
   })
 
   sideBar.appendChild(cityBox)
